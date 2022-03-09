@@ -1,6 +1,6 @@
 package tamoul_package;
 
-//testttttouneeeeeejdizjiz
+//gros pc
 
 public class Game {
 
