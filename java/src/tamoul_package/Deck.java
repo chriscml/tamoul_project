@@ -44,7 +44,7 @@ public class Deck {
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < menu.getNbOfPlayers(); j++) {
 				menu.players.get(j).deck_player.add(deck.get(51 - cpt));
-				// deck.remove(cpt);
+				deck.remove(51 - cpt);
 				System.out.println(
 						"player" + (j + 1) + " carte" + cpt + " : " + menu.players.get(j).deck_player.get(i).getRank()
 								+ " " + menu.players.get(j).deck_player.get(i).getSuit());
@@ -61,7 +61,9 @@ public class Deck {
 	public void drawCard(Deck paquet) {
 		int i = 0;
 		paquet.getDiscard().add(paquet.getDeck().get(getDeck().size() - 1));
-		System.out.println(paquet.getDiscard().get(i).getRank() + " " + paquet.getDiscard().get(i).getSuit());
+		paquet.getDeck().remove(getDeck().size() - 1);
+		// System.out.println(paquet.getDiscard().get(i).getRank() + " " +
+		// paquet.getDiscard().get(i).getSuit());
 	}
 
 }

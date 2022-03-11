@@ -16,16 +16,19 @@ public class Game {
 		Menu menu = new Menu();
 		paquet.distrib(menu);
 
-		for (int i = 0; i < 52 - (4 * menu.getNbOfPlayers()); i++) {
+		for (int i = 0; i < paquet.getDeck().size(); i++) {
 			System.out.println(paquet.getDeck().get(i).getRank() + " " + paquet.getDeck().get(i).getSuit());
 		}
 		System.out.println("\n-_-_-_-__-_-_-_-_-_-_-_-_-__-_-_-_-\n");
 
 		paquet.drawCard(paquet);
 		paquet.drawCard(paquet);
-		paquet.drawCard(paquet);
-		paquet.drawCard(paquet);
-		paquet.drawCard(paquet);
+
+		for (int i = 0; i < paquet.getDiscard().size(); i++) {
+			System.out.println(paquet.getDiscard().get(i).getRank() + " " + paquet.getDiscard().get(i).getSuit());
+		}
+		System.out.println("\n-_-_-_-__-_-_-_-_-_-_-_-_-__-_-_-_-\n");
+
 	}
 
 }
