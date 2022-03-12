@@ -29,41 +29,20 @@ public class Deck {
 	}
 
 	public void distrib(Menu menu) {
-		/*
-		 * for (int i = 0; i < 4; i++) { do { nombre_aleatoire = min + (int)
-		 * (Math.random() * ((max - min) + 1)); } while (nombre_aleatoire ==
-		 * nombre_aleatoire_anc); nombre_aleatoire_anc = nombre_aleatoire; max--;
-		 * player.deck_player.add(new Card(getDeck().get(nombre_aleatoire).getRank(),
-		 * getDeck().get(nombre_aleatoire).getSuit())); deck.remove(nombre_aleatoire);
-		 * System.out.println(player.deck_player.get(i).getRank() + " " +
-		 * player.deck_player.get(i).getSuit()); } System.out.println(max + "\n");
-		 */
-
 		int cpt = 0;
 		// shuffle();
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < menu.getNbOfPlayers(); j++) {
 				menu.players.get(j).deck_player.add(deck.get(51 - cpt));
 				deck.remove(51 - cpt);
-				System.out.println(
-						"player" + (j + 1) + " carte" + cpt + " : " + menu.players.get(j).deck_player.get(i).getRank()
-								+ " " + menu.players.get(j).deck_player.get(i).getSuit());
+				/*
+				 * System.out.println( "player" + (j + 1) + " carte" + cpt + " : " +
+				 * menu.players.get(j).deck_player.get(i).getRank() + " " +
+				 * menu.players.get(j).deck_player.get(i).getSuit());
+				 */
 				cpt = cpt + 1;
 			}
-			System.out.println("\n ------------------------ \n");
+			// System.out.println("\n ------------------------ \n");
 		}
-
-		/*
-		 * for (int i = 0; i < (4 * menu.getNbOfPlayers()); i++) { deck.remove(i); }
-		 */
 	}
-
-	public void drawCard(Deck paquet) {
-		int i = 0;
-		paquet.getDiscard().add(paquet.getDeck().get(getDeck().size() - 1));
-		paquet.getDeck().remove(getDeck().size() - 1);
-		// System.out.println(paquet.getDiscard().get(i).getRank() + " " +
-		// paquet.getDiscard().get(i).getSuit());
-	}
-
 }
