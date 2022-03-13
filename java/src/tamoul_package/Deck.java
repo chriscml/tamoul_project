@@ -28,12 +28,12 @@ public class Deck {
 		return discard;
 	}
 
-	public void distrib(Menu menu) {
+	public void distrib(ArrayList<Player> players) {
 		int cpt = 0;
 		// shuffle();
 		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < menu.getNbOfPlayers(); j++) {
-				menu.players.get(j).deck_player.add(deck.get(51 - cpt));
+			for (int j = 0; j < Game.getNbOfPlayers(); j++) {
+				players.get(j).deck_player.add(deck.get(51 - cpt));
 				deck.remove(51 - cpt);
 				/*
 				 * System.out.println( "player" + (j + 1) + " carte" + cpt + " : " +
