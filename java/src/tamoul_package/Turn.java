@@ -17,13 +17,13 @@ public class Turn {
 			break;
 		case 1:
 			System.out.println("you chose to exchange with the discard, what card ?");
-			card_to_exchange = sc.nextInt();
+			/*card_to_exchange = sc.nextInt();
 			temp = paquet.getDiscard().get(paquet.getDiscard().size() - 1);
 			temp2
 			paquet.getDiscard().remove(paquet.getDiscard().get(paquet.getDiscard().size() - 1));
 			paquet.getDiscard().add(player.deck_player.get(card_to_exchange));
 			player.deck_player.add(card_to_exchange,temp);
-			break;
+			break;*/
 		}
 	}
 
