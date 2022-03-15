@@ -3,29 +3,36 @@ package tamoul_package;
 import java.util.Scanner;
 
 public class Turn {
-
-	public void firstMoove(Deck paquet, Player player) {
-
+	
+	private static final int SCORE_MIN_TO_TAMOUL = 5;
+	
+	public boolean firstMoove(Deck paquet, Player player, boolean already_last_turn) {
+		boolean last_turn=false;
 		int choice = 0, card_to_exchange = 0;
 		Card temp, temp2;
 		Scanner sc = new Scanner(System.in);
+		System.out.println("choose your moove : \n 0 : draw a card \n 1 : exchange card with the discard");
+		if(player.getScoreGame() <= SCORE_MIN_TO_TAMOUL && already_last_turn==false)
+		{
+			System.out.println(" 2 : tamoul");
+		}
 		choice = sc.nextInt();
 		switch (choice) {
 		case 0:
 			System.out.println("you chose to draw a card");
 			drawCard(paquet);
+			if(already_last_turn == true)
+			{
+				last_turn=true;
+			}
+			else
+			{
+				last_turn = false;
+			}
 			break;
 		case 1:
 			System.out.println("you chose to exchange with the discard, what card ?");
-<<<<<<< HEAD
-			/*card_to_exchange = sc.nextInt();
-			temp = paquet.getDiscard().get(paquet.getDiscard().size() - 1);
-			temp2
-			paquet.getDiscard().remove(paquet.getDiscard().get(paquet.getDiscard().size() - 1));
-			paquet.getDiscard().add(player.deck_player.get(card_to_exchange));
-			player.deck_player.add(card_to_exchange,temp);
-			break;*/
-=======
+
 			card_to_exchange = sc.nextInt();
 			temp = paquet.getDiscard().get(paquet.getDiscard().size() - 1); // retiens la carte de la pioce
 			temp2 = player.deck_player.get(card_to_exchange); // retiens la carte à echangé
@@ -35,9 +42,21 @@ public class Turn {
 			player.deck_player.add(card_to_exchange, temp); // mets la carte de la pioche a la place de la carte du
 															// joueur
 			paquet.getDiscard().add(temp2); // mets la carte du joueur sur la pioche
+			if(already_last_turn == true)
+			{
+				last_turn=true;
+			}
+			else
+			{
+				last_turn = false;
+			}
 			break;
->>>>>>> d8e206535f1c6d817c781cbf389b0f53192a475e
+		case 2:
+			System.out.println("Last turn !!");
+			last_turn = true;
+			break;
 		}
+		return last_turn;
 	}
 
 	public void drawCard(Deck paquet) {
