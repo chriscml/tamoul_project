@@ -32,7 +32,7 @@ public class Game {
 		Deck paquet = new Deck();
 		// simu -----------------------------------------
 		players.get(0).setUsername("chris");
-		players.get(1).setUsername("clara");
+		players.get(1).setUsername("val");
 		// players.get(2).setUsername("pap");
 		// players.get(3).setUsername("mam");
 
@@ -92,17 +92,20 @@ public class Game {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Choose menu : ");
 		System.out.println("p to play");
-		System.out.println("q to quit");
-		String input = sc.nextLine();
+		System.out.println("q to see the rules");
+		String input;
+		do {
+			input = sc.nextLine();
+			switch (input) {
+			case "p":
+				System.out.println("PLAY");
+				break;
+			case "q":
+				System.out.println("RULES");
+				break;
+			}
+		} while (input != "p");
 
-		switch (input) {
-		case "p":
-			System.out.println("PLAY");
-			break;
-		case "q":
-			System.out.println("QUIT");
-			break;
-		}
 		return input;
 	}
 

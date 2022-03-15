@@ -7,7 +7,7 @@ public class Turn {
 	public void firstMoove(Deck paquet, Player player) {
 
 		int choice = 0, card_to_exchange = 0;
-		Card temp,temp2;
+		Card temp, temp2;
 		Scanner sc = new Scanner(System.in);
 		choice = sc.nextInt();
 		switch (choice) {
@@ -17,6 +17,7 @@ public class Turn {
 			break;
 		case 1:
 			System.out.println("you chose to exchange with the discard, what card ?");
+<<<<<<< HEAD
 			/*card_to_exchange = sc.nextInt();
 			temp = paquet.getDiscard().get(paquet.getDiscard().size() - 1);
 			temp2
@@ -24,6 +25,18 @@ public class Turn {
 			paquet.getDiscard().add(player.deck_player.get(card_to_exchange));
 			player.deck_player.add(card_to_exchange,temp);
 			break;*/
+=======
+			card_to_exchange = sc.nextInt();
+			temp = paquet.getDiscard().get(paquet.getDiscard().size() - 1); // retiens la carte de la pioce
+			temp2 = player.deck_player.get(card_to_exchange); // retiens la carte à echangé
+			paquet.getDiscard().remove(paquet.getDiscard().get(paquet.getDiscard().size() - 1)); // enleve la carte de
+																									// la pioche
+			player.deck_player.remove(card_to_exchange); // enleve la carte du joueur
+			player.deck_player.add(card_to_exchange, temp); // mets la carte de la pioche a la place de la carte du
+															// joueur
+			paquet.getDiscard().add(temp2); // mets la carte du joueur sur la pioche
+			break;
+>>>>>>> d8e206535f1c6d817c781cbf389b0f53192a475e
 		}
 	}
 
