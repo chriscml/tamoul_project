@@ -14,14 +14,13 @@ public class Game {
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
-
 		// chooseMenu();
 		chooseNumberOfPlayers();
 		do {
 			play();
-			System.out.println("do you want to play again ?");
+			System.out.println(" \n ------------END----------\n do you want to play again ?");
 			play_again = sc.nextBoolean();
-			round += 1;
+			round++;
 		} while (play_again == true);
 		System.out.println("See you soon :)");
 
@@ -33,10 +32,11 @@ public class Game {
 		int current_player;
 		boolean end = false;
 		boolean last_turn = false;
-		int last_turn_count=0;
+		int last_turn_count = 0;
+		int turn_count = 0;
 		// simu -----------------------------------------
 		players.get(0).setUsername("chris");
-		players.get(1).setUsername("franfran");
+		players.get(1).setUsername("bob");
 		// players.get(2).setUsername("pap");
 		// players.get(3).setUsername("mam");
 
@@ -48,7 +48,7 @@ public class Game {
 
 		paquet.distrib(players);
 		System.out.println("\n--------distribution---------\n");
-		for(int i=0;i<19;i++) //simuler une pioche
+		for (int i = 0; i < 11; i++) // simuler une pioche
 		{
 			turn.drawCard(paquet);
 		}
@@ -56,62 +56,55 @@ public class Game {
 		showDeckPlayerAll(players); // af : montrer les deux premieres cartes
 		System.out.println("\n ------------ Start Playing------------ \n");
 		current_player = firstPlay(round);
-		last_turn_count=nb_of_players;
-		do
-		{
+		last_turn_count = nb_of_players;
+		do {
 			System.out.println("\n it's " + players.get(current_player).getUsername() + "'s turns \n");
-			pointsCalculation();//pour savoir si le joueur a le droit de tamoul
+			pointsCalculation();// pour savoir si le joueur a le droit de tamoul
 			players.get(0).setScoreGame(2);
 			players.get(1).setScoreGame(5);
-			last_turn = turn.firstMoove(paquet, players.get(current_player),last_turn);
-			pointsCalculation();//pour calculer le nombre de points de chaque joueur après le coup
+			last_turn = turn.firstMove(paquet, players.get(current_player), last_turn, turn_count);
+			pointsCalculation();// pour calculer le nombre de points de chaque joueur après le coup
 			showDeckPlayerAll(players);
-			/*for (int i = 0; i < paquet.getDiscard().size(); i++) {
+
+			for (int i = 0; i < paquet.getDiscard().size(); i++) {
 				System.out.println(paquet.getDiscard().get(i).getRank() + " " + paquet.getDiscard().get(i).getSuit());
-			}*/
+			}
+
 			for (int i = 0; i < getNbOfPlayers(); i++) {
 				System.out.println(players.get(i).getUsername() + " : " + players.get(i).getScoreGame() + " points ");
 			}
-			
-			if(last_turn==true) //test si c'est le dernier tour pour jouer encore 1 seul cycle
+
+			if (last_turn == true) // test si c'est le dernier tour pour jouer encore 1 seul cycle
 			{
-				if(current_player == (nb_of_players-1))
-				{
+				if (current_player == (nb_of_players - 1)) {
 					current_player = 0;
-				}
-				else
-				{
+				} else {
 					current_player++;
 				}
-				last_turn_count--; 
-				if(last_turn_count==0) //si le dernier joueur a joué, c'est la fin de la manche
+				last_turn_count--;
+				if (last_turn_count == 0) // si le dernier joueur a joué, c'est la fin de la manche
 				{
 					end = true;
 				}
-			}
-			else
-			{
-				if(current_player == (nb_of_players-1))
-				{
+			} else {
+				if (current_player == (nb_of_players - 1)) {
 					current_player = 0;
-				}
-				else
-				{
+				} else {
 					current_player++;
 				}
 			}
-			
-		  }while(end == false);
-		
-		for(int i=0;i<nb_of_players;i++)
-		{
+			turn_count++;
+		} while (end == false);
+
+		for (int i = 0; i < nb_of_players; i++) {
 			players.get(i).setScoreAll(players.get(i).getScoreGame() + players.get(i).getScoreAll());
 		}
+		System.out.println("TOTAL OF POINT : \n ");
 		for (int i = 0; i < getNbOfPlayers(); i++) {
-			System.out.println("TOTAL OF POINT : \n " + players.get(i).getUsername() + " : " + players.get(i).getScoreAll() + " points ");
+			System.out.println(players.get(i).getUsername() + " : " + players.get(i).getScoreAll() + " points ");
 		}
 	}
-	
+
 	static int firstPlay(int round) {
 
 		int random = 0, score_max = 0;
@@ -122,9 +115,9 @@ public class Game {
 			ret = random;
 		} else {
 			for (int i = 0; i < getNbOfPlayers(); i++) {
-				if (players.get(i).getScoreGame() > score_max) {
+				if (players.get(i).getScoreAll() > score_max) {
 					ret = i;
-					score_max = players.get(i).getScoreGame();
+					score_max = players.get(i).getScoreAll();
 				}
 			}
 		}
@@ -198,27 +191,25 @@ public class Game {
 
 		}
 	}
-	
-	public static void pointsCalculation()
-	{
+
+	public static void pointsCalculation() {
 
 		int deck_point = 0;
-		for(int i=0;i<nb_of_players;i++) //recuperer les points de chaque carte du deck du joueur
+		for (int i = 0; i < nb_of_players; i++) // recuperer les points de chaque carte du deck du joueur
 		{
-			for(int j=0;j<4;j++) //recuperer les points de chaque carte du deck du joueur
+			for (int j = 0; j < 4; j++) // recuperer les points de chaque carte du deck du joueur
 			{
-				if((players.get(i).deck_player.get(j).getRank().getOrdre() == 13) && (players.get(i).deck_player.get(j).getSuit().getOrdre() == 2 || players.get(i).deck_player.get(j).getSuit().getOrdre() == 2) )
-				{
-					
-				}
-				else
-				{
+				if ((players.get(i).deck_player.get(j).getRank().getOrdre() == 13)
+						&& (players.get(i).deck_player.get(j).getSuit().getOrdre() == 2
+								|| players.get(i).deck_player.get(j).getSuit().getOrdre() == 2)) {
+
+				} else {
 					deck_point = players.get(i).deck_player.get(j).getRank().getOrdre() + deck_point;
 				}
 			}
 			players.get(i).setScoreGame(deck_point);
-			deck_point=0;
+			deck_point = 0;
 		}
 	}
-	
+
 }
