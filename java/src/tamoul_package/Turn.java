@@ -15,7 +15,7 @@ public class Turn {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("choose your move : ");
 		System.out.println(" 0 : draw a card");
-		if (turn_count == 0) {
+		if (turn_count == 0 || paquet.getDiscard().get(paquet.getDiscard().size() - 1) == null) {
 
 		} else {
 			System.out.println(" 1 : exchange card with the discard");
@@ -127,14 +127,26 @@ public class Turn {
 			secondMove(paquet, player, already_last_turn, turn_count);
 		}
 
+		int card_to_exchange = 0;
+		Card temp;
+		Card temp2;
 		switch (choice) {
 		case 0:
-			System.out.println("select the card you want to exchange !");
+			System.out.println("select the card you want to exchange with the draw!");
 			if (already_last_turn == true) {
 				last_turn = true;
 			} else {
 				last_turn = false;
 			}
+			card_to_exchange = sc.nextInt();
+			temp = paquet.getDiscard().get(paquet.getDiscard().size() - 1); // retiens la carte de la pioche
+			temp2 = player.deck_player.get(card_to_exchange); // retiens la carte à echangé
+			paquet.getDiscard().remove(paquet.getDiscard().get(paquet.getDiscard().size() - 1)); // enleve la carte de
+																									// la pioche
+			player.deck_player.remove(card_to_exchange); // enleve la carte du joueur
+			player.deck_player.add(card_to_exchange, temp); // mets la carte de la pioche a la place de la carte du
+															// joueur
+			paquet.getDiscard().add(temp2); // mets la carte du joueur sur la pioche
 			break;
 		case 1:
 			System.out.println("Last turn !!");
@@ -170,62 +182,63 @@ public class Turn {
 		return ret;
 	}
 
-	public void sevenHeight(Deck paquet,ArrayList<Player> players) {
+	public void sevenHeight(Deck paquet, ArrayList<Player> players) {
 		int choice_card = 0;
 		System.out.println("what card do you want to see ? (enter a number)");
-		
+
 	}
 
-	public void nineTen(Deck paquet,ArrayList<Player> players) {
+	public void nineTen(Deck paquet, ArrayList<Player> players) {
 		int choice_id_player = 0;
 		int choice_card = 0;
 		System.out.println("what player do you want to spie ? (enter his id)");
-		choice_id_player = enterIdPlayer(players,Game.getCurrent_player());
+		choice_id_player = enterIdPlayer(players, Game.getCurrent_player());
 		System.out.println("what card do you want to see ? (enter a number)");
-		choice_card=enterNumberCard();
-		System.out.println("the card " + choice_card + " of "+ players.get(choice_id_player).getUsername() + " is "+ players.get(choice_id_player).deck_player.get(choice_card).getRank()+" " +players.get(choice_id_player).deck_player.get(choice_card).getSuit() );
+		choice_card = enterNumberCard();
+		System.out.println("the card " + choice_card + " of " + players.get(choice_id_player).getUsername() + " is "
+				+ players.get(choice_id_player).deck_player.get(choice_card).getRank() + " "
+				+ players.get(choice_id_player).deck_player.get(choice_card).getSuit());
 	}
 
-	public void jackQueen(Deck paquet,ArrayList<Player> players) {
+	public void jackQueen(Deck paquet, ArrayList<Player> players) {
 	}
 
-	public void kingBlack(Deck paquet,ArrayList<Player> players) {
+	public void kingBlack(Deck paquet, ArrayList<Player> players) {
 	}
-	
-	public int enterIdPlayer(ArrayList<Player> players,int current)
-	{
+
+	public int enterIdPlayer(ArrayList<Player> players, int current) {
 		int choice = 0;
 		Scanner sc = new Scanner(System.in);
 		try {
 			do {
 				choice = sc.nextInt();
-				//ameliorer pour tester le nombre max de joueur rentree au debut avec getnbplayer
-				if ((choice != 0 && choice!=1 && choice!=2 && choice!=3 && choice!=4) || (choice == current )) {
+				// ameliorer pour tester le nombre max de joueur rentree au debut avec
+				// getnbplayer
+				if ((choice != 0 && choice != 1 && choice != 2 && choice != 3 && choice != 4) || (choice == current)) {
 					System.out.println("the number is incorrect");
 				}
-			} while ((choice != 0 && choice!=1  && choice!=2 && choice!=3 && choice!=4) || choice == current);
+			} while ((choice != 0 && choice != 1 && choice != 2 && choice != 3 && choice != 4) || choice == current);
 		} catch (InputMismatchException e) {
 			System.out.println("the number is incorrect");
-			enterIdPlayer(players,current);
+			enterIdPlayer(players, current);
 		} catch (Exception e) {
 			System.out.println("the number is incorrect");
-			enterIdPlayer(players,current);
+			enterIdPlayer(players, current);
 		}
 		return choice;
-   }
+	}
 
-	public int enterNumberCard()
-	{
+	public int enterNumberCard() {
 		int choice = 0;
 		Scanner sc = new Scanner(System.in);
-		
+
 		try {
 			do {
 				choice = sc.nextInt();
 				if (choice != 0 && choice != 1 && choice != 2 && choice != 3) {
 					System.out.println("the name does not exist");
 				}
-			} while ( choice != 0 && choice != 1 && choice != 2 && choice != 3);
+			} while (choice != 0 && choice != 1 && choice != 2 && choice != 3);
 		} catch (InputMismatchException e) {
 			System.out.println("The number is not correct");
 			enterNumberCard();
@@ -235,27 +248,23 @@ public class Turn {
 		}
 		return choice;
 	}
-	
-	public void asset (Deck paquet,ArrayList<Player> players )
-	{
+
+	public void asset(Deck paquet, ArrayList<Player> players) {
 		Card last_draw;
 		last_draw = paquet.getDiscard().get(paquet.getDiscard().size() - 1);
-		if(last_draw.getRank().getOrdre() == 7 ||last_draw.getRank().getOrdre() == 8)
-		{
-			sevenHeight(paquet,players);
+		if (last_draw.getRank().getOrdre() == 7 || last_draw.getRank().getOrdre() == 8) {
+			sevenHeight(paquet, players);
 		}
-		if(last_draw.getRank().getOrdre() == 9 ||last_draw.getRank().getOrdre() == 10)
-		{
+		if (last_draw.getRank().getOrdre() == 9 || last_draw.getRank().getOrdre() == 10) {
 			nineTen(paquet, players);
 		}
-		if(last_draw.getRank().getOrdre() == 11 ||last_draw.getRank().getOrdre() == 12)
-		{
+		if (last_draw.getRank().getOrdre() == 11 || last_draw.getRank().getOrdre() == 12) {
 			jackQueen(paquet, players);
 		}
-		if(last_draw.getRank().getOrdre() == 13 && (last_draw.getSuit().getOrdre() == 1 || last_draw.getSuit().getOrdre() == 4))
-		{
+		if (last_draw.getRank().getOrdre() == 13
+				&& (last_draw.getSuit().getOrdre() == 1 || last_draw.getSuit().getOrdre() == 4)) {
 			kingBlack(paquet, players);
 		}
 	}
-	
+
 }
