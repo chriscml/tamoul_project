@@ -1,5 +1,6 @@
 package tamoul_package;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -23,14 +24,14 @@ public class Turn {
 			do {
 				choice = sc.nextInt();
 				if (choice != 0 && choice != 1 && choice != 2) {
-					System.out.println("le nombre rentree est incorrecte");
+					System.out.println("The number is not correct");
 				}
 			} while (choice != 0 && choice != 1 && choice != 2);
 		} catch (InputMismatchException e) {
-			System.out.println("le nombre rentree est incorrecte");
+			System.out.println("The number is not correct");
 			firstMove(paquet, player, already_last_turn, turn_count);
 		} catch (Exception e) {
-			System.out.println("le nombre rentree est incorrecte");
+			System.out.println("The number is not correct");
 			firstMove(paquet, player, already_last_turn, turn_count);
 		}
 
@@ -81,20 +82,20 @@ public class Turn {
 				do {
 					choice = sc.nextInt();
 					if (choice != 0 && choice != 1) {
-						System.out.println("le nombre rentree est incorrecte");
+						System.out.println("The number is not correct");
 					}
 				} while (choice != 0 && choice != 1);
 			} catch (InputMismatchException e) {
-				System.out.println("le nombre rentree est incorrecte");
+				System.out.println("The number is not correct");
 				secondMove(paquet, player, already_last_turn, turn_count);
 			} catch (Exception e) {
-				System.out.println("le nombre rentree est incorrecte");
+				System.out.println("The number is not correct");
 				secondMove(paquet, player, already_last_turn, turn_count);
 			}
 
 			switch (choice) {
 			case 0:
-				// faire une fonction atout en fonction de la carte qui a été pioché+
+				asset(paquet, Game.players);
 				break;
 			case 1:
 				// ne rien faire
@@ -115,14 +116,14 @@ public class Turn {
 			do {
 				choice = sc.nextInt();
 				if (choice != 0 && choice != 1 && choice != 2) {
-					System.out.println("le nombre rentree est incorrecte");
+					System.out.println("The number is not correct");
 				}
 			} while (choice != 0 && choice != 1 && choice != 2);
 		} catch (InputMismatchException e) {
-			System.out.println("le nombre rentree est incorrecte");
+			System.out.println("The number is not correct");
 			secondMove(paquet, player, already_last_turn, turn_count);
 		} catch (Exception e) {
-			System.out.println("le nombre rentree est incorrecte");
+			System.out.println("The number is not correct");
 			secondMove(paquet, player, already_last_turn, turn_count);
 		}
 
@@ -169,16 +170,92 @@ public class Turn {
 		return ret;
 	}
 
-	public void sevenHeight(Deck paquet) {
+	public void sevenHeight(Deck paquet,ArrayList<Player> players) {
+		int choice_card = 0;
+		System.out.println("what card do you want to see ? (enter a number)");
+		
 	}
 
-	public void nineTen(Deck paquet) {
+	public void nineTen(Deck paquet,ArrayList<Player> players) {
+		int choice_id_player = 0;
+		int choice_card = 0;
+		System.out.println("what player do you want to spie ? (enter his id)");
+		choice_id_player = enterIdPlayer(players,Game.getCurrent_player());
+		System.out.println("what card do you want to see ? (enter a number)");
+		choice_card=enterNumberCard();
+		System.out.println("the card " + choice_card + " of "+ players.get(choice_id_player).getUsername() + " is "+ players.get(choice_id_player).deck_player.get(choice_card).getRank()+" " +players.get(choice_id_player).deck_player.get(choice_card).getSuit() );
 	}
 
-	public void jackQueen(Deck paquet) {
+	public void jackQueen(Deck paquet,ArrayList<Player> players) {
 	}
 
-	public void kingBlack(Deck paquet) {
+	public void kingBlack(Deck paquet,ArrayList<Player> players) {
 	}
+	
+	public int enterIdPlayer(ArrayList<Player> players,int current)
+	{
+		int choice = 0;
+		Scanner sc = new Scanner(System.in);
+		try {
+			do {
+				choice = sc.nextInt();
+				//ameliorer pour tester le nombre max de joueur rentree au debut avec getnbplayer
+				if ((choice != 0 && choice!=1 && choice!=2 && choice!=3 && choice!=4) || (choice == current )) {
+					System.out.println("the number is incorrect");
+				}
+			} while ((choice != 0 && choice!=1  && choice!=2 && choice!=3 && choice!=4) || choice == current);
+		} catch (InputMismatchException e) {
+			System.out.println("the number is incorrect");
+			enterIdPlayer(players,current);
+		} catch (Exception e) {
+			System.out.println("the number is incorrect");
+			enterIdPlayer(players,current);
+		}
+		return choice;
+   }
 
+	public int enterNumberCard()
+	{
+		int choice = 0;
+		Scanner sc = new Scanner(System.in);
+		
+		try {
+			do {
+				choice = sc.nextInt();
+				if (choice != 0 && choice != 1 && choice != 2 && choice != 3) {
+					System.out.println("the name does not exist");
+				}
+			} while ( choice != 0 && choice != 1 && choice != 2 && choice != 3);
+		} catch (InputMismatchException e) {
+			System.out.println("The number is not correct");
+			enterNumberCard();
+		} catch (Exception e) {
+			System.out.println("The number is not correct");
+			enterNumberCard();
+		}
+		return choice;
+	}
+	
+	public void asset (Deck paquet,ArrayList<Player> players )
+	{
+		Card last_draw;
+		last_draw = paquet.getDiscard().get(paquet.getDiscard().size() - 1);
+		if(last_draw.getRank().getOrdre() == 7 ||last_draw.getRank().getOrdre() == 8)
+		{
+			sevenHeight(paquet,players);
+		}
+		if(last_draw.getRank().getOrdre() == 9 ||last_draw.getRank().getOrdre() == 10)
+		{
+			nineTen(paquet, players);
+		}
+		if(last_draw.getRank().getOrdre() == 11 ||last_draw.getRank().getOrdre() == 12)
+		{
+			jackQueen(paquet, players);
+		}
+		if(last_draw.getRank().getOrdre() == 13 && (last_draw.getSuit().getOrdre() == 1 || last_draw.getSuit().getOrdre() == 4))
+		{
+			kingBlack(paquet, players);
+		}
+	}
+	
 }

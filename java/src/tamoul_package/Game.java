@@ -10,6 +10,7 @@ public class Game {
 	static int round = 0;
 	static boolean play_again = true;
 	static int nb_of_players;
+	private static int current_player;
 	static ArrayList<Player> players = new ArrayList<>();
 
 	public static void main(String[] args) {
@@ -29,7 +30,6 @@ public class Game {
 	private static void play() {
 		Turn turn = new Turn();
 		Deck paquet = new Deck();
-		int current_player;
 		boolean end = false;
 		boolean last_turn = false;
 		int last_turn_count = 0;
@@ -48,21 +48,21 @@ public class Game {
 
 		paquet.distrib(players);
 		System.out.println("\n--------distribution---------\n");
-		for (int i = 0; i < 11; i++) // simuler une pioche
+		for (int i = 0; i < 9; i++) // simuler une pioche
 		{
 			turn.drawCard(paquet);
 		}
 		System.out.println("\n ------------Remember your cards----------- \n");
 		showDeckPlayerAll(players); // af : montrer les deux premieres cartes
 		System.out.println("\n ------------ Start Playing------------ \n");
-		current_player = firstPlay(round);
+		setCurrent_player(firstPlay(round));
 		last_turn_count = nb_of_players;
 		do {
-			System.out.println("\n it's " + players.get(current_player).getUsername() + "'s turns \n");
+			System.out.println("\n it's " + players.get(getCurrent_player()).getUsername() + "'s turns \n");
 			pointsCalculation();// pour savoir si le joueur a le droit de tamoul
 			players.get(0).setScoreGame(2);
 			players.get(1).setScoreGame(5);
-			last_turn = turn.firstMove(paquet, players.get(current_player), last_turn, turn_count);
+			last_turn = turn.firstMove(paquet, players.get(getCurrent_player()), last_turn, turn_count);
 			pointsCalculation();// pour calculer le nombre de points de chaque joueur après le coup
 			showDeckPlayerAll(players);
 
@@ -76,10 +76,10 @@ public class Game {
 
 			if (last_turn == true) // test si c'est le dernier tour pour jouer encore 1 seul cycle
 			{
-				if (current_player == (nb_of_players - 1)) {
-					current_player = 0;
+				if (getCurrent_player() == (nb_of_players - 1)) {
+					setCurrent_player(0);
 				} else {
-					current_player++;
+					setCurrent_player(getCurrent_player() + 1);
 				}
 				last_turn_count--;
 				if (last_turn_count == 0) // si le dernier joueur a joué, c'est la fin de la manche
@@ -87,10 +87,10 @@ public class Game {
 					end = true;
 				}
 			} else {
-				if (current_player == (nb_of_players - 1)) {
-					current_player = 0;
+				if (getCurrent_player() == (nb_of_players - 1)) {
+					setCurrent_player(0);
 				} else {
-					current_player++;
+					setCurrent_player(getCurrent_player() + 1);
 				}
 			}
 			turn_count++;
@@ -158,6 +158,7 @@ public class Game {
 		nb_of_players = chooseNumberPlayer();
 		for (int i = 0; i < nb_of_players; i++) {
 			players.add(new Player(null));
+			players.get(i).setId(i);
 			System.out.println("new slot");
 		}
 		System.out.println("\n");
@@ -210,6 +211,14 @@ public class Game {
 			players.get(i).setScoreGame(deck_point);
 			deck_point = 0;
 		}
+	}
+
+	public static int getCurrent_player() {
+		return current_player;
+	}
+
+	public static void setCurrent_player(int current_player) {
+		Game.current_player = current_player;
 	}
 
 }

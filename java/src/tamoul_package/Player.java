@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Player {
 	private String username;
+	private int id;
 	private int score_game, score_all;
 	ArrayList<Card> deck_player = new ArrayList<>();
 
@@ -33,6 +34,14 @@ public class Player {
 
 	public void setScoreAll(int score_all) {
 		this.score_all = score_all;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }
