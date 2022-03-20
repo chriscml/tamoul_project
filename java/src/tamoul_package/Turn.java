@@ -29,10 +29,10 @@ public class Turn {
 			} while (choice != 0 && choice != 1 && choice != 2);
 		} catch (InputMismatchException e) {
 			System.out.println("The number is not correct");
-			firstMove(paquet, player, already_last_turn, turn_count);
+			last_turn = firstMove(paquet, player, already_last_turn, turn_count);
 		} catch (Exception e) {
 			System.out.println("The number is not correct");
-			firstMove(paquet, player, already_last_turn, turn_count);
+			last_turn = firstMove(paquet, player, already_last_turn, turn_count);
 		}
 
 		switch (choice) {
@@ -87,10 +87,10 @@ public class Turn {
 				} while (choice != 0 && choice != 1);
 			} catch (InputMismatchException e) {
 				System.out.println("The number is not correct");
-				secondMove(paquet, player, already_last_turn, turn_count);
+				last_turn = secondMove(paquet, player, already_last_turn, turn_count);
 			} catch (Exception e) {
 				System.out.println("The number is not correct");
-				secondMove(paquet, player, already_last_turn, turn_count);
+				last_turn = secondMove(paquet, player, already_last_turn, turn_count);
 			}
 
 			switch (choice) {
@@ -149,8 +149,13 @@ public class Turn {
 			paquet.getDiscard().add(temp2); // mets la carte du joueur sur la pioche
 			break;
 		case 1:
-			System.out.println("Last turn !!");
-			last_turn = true;
+			if (player.getScoreGame() <= SCORE_MIN_TO_TAMOUL && already_last_turn == false) {
+				System.out.println("you can't tamoul already");
+
+			} else {
+				System.out.println("Last turn !!");
+				last_turn = true;
+			}
 			break;
 		case 2:
 			System.out.println("nothing to do");
@@ -166,15 +171,39 @@ public class Turn {
 	}
 
 	public void drawCard(Deck paquet) {
-		paquet.getDiscard().add(paquet.getDeck().get(paquet.getDeck().size() - 1));
-		paquet.getDeck().remove(paquet.getDeck().size() - 1);
+		int sizeDiscard = paquet.getDiscard().size();
+		paquet.getDiscard().add(paquet.getDeck().get(paquet.getDeck().size() - 1)); // ajout de la derniere carte du
+																					// paquet dans la pioche
+		paquet.getDeck().remove(paquet.getDeck().size() - 1); // retirer la derniere carte du paquet
+
+		if (paquet.getDeck().size() - 1 == 0) {
+			System.out.println("let's shuffle the discard to create a new deck");
+
+			// GERER CE PROBLEME
+			for (int i = 0; i < sizeDiscard; i++) {
+				// rempli la pioche avec la défausse sauf la derniere carte
+				paquet.getDeck().add(paquet.getDiscard().get(i));
+				// vide la defausse avec la défausse sauf la derniere carte
+				paquet.getDiscard().remove(i);
+			}
+			// Collections.shuffle(paquet.getDeck());
+			for (int i = 0; i < sizeDiscard; i++) {
+				System.out.println("discard: " + paquet.getDiscard().get(i).getRank() + " "
+						+ paquet.getDiscard().get(i).getSuit());
+			}
+			for (int i = 0; i < paquet.getDeck().size(); i++) {
+				System.out.println(
+						"deck: " + paquet.getDeck().get(i).getRank() + " " + paquet.getDeck().get(i).getSuit());
+			}
+		}
 	}
 
 	public boolean isAsset(Deck paquet) {
 		boolean ret = false;
 		Card test;
 		test = paquet.getDiscard().get(paquet.getDiscard().size() - 1);
-		if (test.getRank().getOrdre() > 6) {
+		if ((test.getRank().getOrdre() > 6 && test.getRank().getOrdre() < 13) || ((test.getRank().getOrdre() == 13)
+				&& ((test.getSuit().getOrdre() == 1) || (test.getSuit().getOrdre() == 4)))) {
 			ret = true;
 		} else {
 			ret = false;
@@ -185,13 +214,16 @@ public class Turn {
 	public void sevenHeight(Deck paquet, ArrayList<Player> players) {
 		int choice_card = 0;
 		System.out.println("what card do you want to see ? (enter a number)");
-
+		choice_card = enterNumberCard();
+		System.out.println("the card " + choice_card + " of " + players.get(Game.getCurrent_player()).getUsername()
+				+ " is " + players.get(Game.getCurrent_player()).deck_player.get(choice_card).getRank() + " "
+				+ players.get(Game.getCurrent_player()).deck_player.get(choice_card).getSuit());
 	}
 
 	public void nineTen(Deck paquet, ArrayList<Player> players) {
 		int choice_id_player = 0;
 		int choice_card = 0;
-		System.out.println("what player do you want to spie ? (enter his id)");
+		System.out.println("which player do you want to spy ? (enter his id)");
 		choice_id_player = enterIdPlayer(players, Game.getCurrent_player());
 		System.out.println("what card do you want to see ? (enter a number)");
 		choice_card = enterNumberCard();
@@ -201,29 +233,85 @@ public class Turn {
 	}
 
 	public void jackQueen(Deck paquet, ArrayList<Player> players) {
+		int choice_id_player = 0;
+		int choice_card1 = 0;
+		int choice_card2 = 0;
+		System.out.println("which player do you want to exchange the card with ? (enter his id)");
+		choice_id_player = enterIdPlayer(players, Game.getCurrent_player());
+		System.out.println("what card of " + players.get(choice_id_player).getUsername()
+				+ " do you want to take  ? (enter a number)");
+		choice_card1 = enterNumberCard();
+		System.out.println("what card of your deck do you want to exhange  ? (enter a number)");
+		choice_card2 = enterNumberCard();
+
+		// retiens la carte du joueur avec qui on veut echanger la carte
+		Card temp = players.get(choice_id_player).deck_player.get(choice_card1);
+		// retiens la carte à echangé
+		Card temp2 = players.get(Game.getCurrent_player()).deck_player.get(choice_card2);
+
+		// enleve la carte du joueur avec qui on echange
+		players.get(choice_id_player).deck_player.remove(players.get(choice_id_player).deck_player.get(choice_card1));
+		// enleve la carte du joueur courant
+		players.get(Game.getCurrent_player()).deck_player
+				.remove(players.get(Game.getCurrent_player()).deck_player.get(choice_card2));
+
+		// mets la carte du joueur avec qui on veut echanger a la place de la carte du
+		// joueur qui joue
+		players.get(Game.getCurrent_player()).deck_player.add(choice_card2, temp);
+		// mets la carte du joueur en cours dans le paquet du joueur echange
+		players.get(choice_id_player).deck_player.add(choice_card1, temp2);
+
 	}
 
 	public void kingBlack(Deck paquet, ArrayList<Player> players) {
+		int choice_id_player = 0;
+		int choice_card1 = 0;
+		int choice_card2 = 0;
+		System.out.println("which player do you want to exchange the card with and see it ? (enter his id)");
+		choice_id_player = enterIdPlayer(players, Game.getCurrent_player());
+		System.out.println("what card of " + players.get(choice_id_player).getUsername()
+				+ " do you want to take  ? (enter a number)");
+		choice_card1 = enterNumberCard();
+		System.out.println("what card of your deck do you want to exhange  ? (enter a number)");
+		choice_card2 = enterNumberCard();
+
+		// retiens la carte du joueur avec qui on veut echanger la carte
+		Card temp = players.get(choice_id_player).deck_player.get(choice_card1);
+		// retiens la carte à echangé
+		Card temp2 = players.get(Game.getCurrent_player()).deck_player.get(choice_card2);
+
+		// enleve la carte du joueur avec qui on echange
+		players.get(choice_id_player).deck_player.remove(players.get(choice_id_player).deck_player.get(choice_card1));
+		// enleve la carte du joueur courant
+		players.get(Game.getCurrent_player()).deck_player
+				.remove(players.get(Game.getCurrent_player()).deck_player.get(choice_card2));
+
+		// mets la carte du joueur avec qui on veut echanger a la place de la carte du
+		// joueur qui joue
+		players.get(Game.getCurrent_player()).deck_player.add(choice_card2, temp);
+		// mets la carte du joueur en cours dans le paquet du joueur echange
+		players.get(choice_id_player).deck_player.add(choice_card1, temp2);
+
+		System.out.println(
+				"the card you took is " + players.get(Game.getCurrent_player()).deck_player.get(choice_card2).getRank()
+						+ " " + players.get(Game.getCurrent_player()).deck_player.get(choice_card2).getSuit());
 	}
 
 	public int enterIdPlayer(ArrayList<Player> players, int current) {
 		int choice = 0;
 		Scanner sc = new Scanner(System.in);
 		try {
-			do {
-				choice = sc.nextInt();
-				// ameliorer pour tester le nombre max de joueur rentree au debut avec
-				// getnbplayer
-				if ((choice != 0 && choice != 1 && choice != 2 && choice != 3 && choice != 4) || (choice == current)) {
-					System.out.println("the number is incorrect");
-				}
-			} while ((choice != 0 && choice != 1 && choice != 2 && choice != 3 && choice != 4) || choice == current);
+			choice = sc.nextInt();
+			if ((players.get(choice).getId() > Game.getNbOfPlayers() - 1) || (choice == current)) {
+				System.out.println("the number is incorrect");
+				choice = enterIdPlayer(players, current);
+			}
 		} catch (InputMismatchException e) {
 			System.out.println("the number is incorrect");
-			enterIdPlayer(players, current);
+			choice = enterIdPlayer(players, current);
 		} catch (Exception e) {
 			System.out.println("the number is incorrect");
-			enterIdPlayer(players, current);
+			choice = enterIdPlayer(players, current);
 		}
 		return choice;
 	}
@@ -231,20 +319,19 @@ public class Turn {
 	public int enterNumberCard() {
 		int choice = 0;
 		Scanner sc = new Scanner(System.in);
-
 		try {
 			do {
 				choice = sc.nextInt();
 				if (choice != 0 && choice != 1 && choice != 2 && choice != 3) {
-					System.out.println("the name does not exist");
+					System.out.println("the number is not correct");
 				}
 			} while (choice != 0 && choice != 1 && choice != 2 && choice != 3);
 		} catch (InputMismatchException e) {
 			System.out.println("The number is not correct");
-			enterNumberCard();
+			choice = enterNumberCard();
 		} catch (Exception e) {
 			System.out.println("The number is not correct");
-			enterNumberCard();
+			choice = enterNumberCard();
 		}
 		return choice;
 	}
@@ -267,4 +354,26 @@ public class Turn {
 		}
 	}
 
+	// FONCTION A GERER AVEC LES SERVEURS ET CLIENT (chaque client à son propre
+	// terminal
+	public void emptyDeck(Deck paquet, ArrayList<Player> players) {
+		int choice = 0;
+		Scanner sc = new Scanner(System.in);
+		for (int i = 0; i < Game.getNbOfPlayers(); i++) {
+			for (int j = 0; j < Game.getNbOfPlayers(); j++) {
+				if (players.get(i).deck_player.get(j).getRank() == paquet.getDiscard()
+						.get(paquet.getDiscard().size() - 1).getRank()) {
+
+					choice = sc.nextInt();
+					if (choice == 9) {
+						paquet.getDiscard().add(players.get(i).deck_player.get(j)); // ajout
+						players.get(i).deck_player.remove(players.get(i).deck_player.get(j));// retirer
+					}
+
+				}
+			}
+		}
+	}
+
+//fin de la class
 }

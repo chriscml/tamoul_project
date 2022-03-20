@@ -48,9 +48,12 @@ public class Game {
 
 		paquet.distrib(players);
 		System.out.println("\n--------distribution---------\n");
-		/*
-		 * for (int i = 0; i < 9; i++) // simuler une pioche { turn.drawCard(paquet); }
-		 */
+
+		for (int i = 0; i < 34; i++) // simuler une pioche
+		{
+			turn.drawCard(paquet);
+		}
+
 		System.out.println("\n ------------Remember your cards----------- \n");
 		showDeckPlayerAll(players); // af : montrer les deux premieres cartes
 		System.out.println("\n ------------ Start Playing------------ \n");
