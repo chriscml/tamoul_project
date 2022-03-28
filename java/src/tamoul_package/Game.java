@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Game {
 
@@ -34,6 +36,7 @@ public class Game {
 		boolean last_turn = false;
 		int last_turn_count = 0;
 		int turn_count = 0;
+		Timer delai = new Timer();
 		// simu -----------------------------------------
 		players.get(0).setUsername("chris");
 		players.get(1).setUsername("bob");
@@ -49,13 +52,27 @@ public class Game {
 		paquet.distrib(players);
 		System.out.println("\n--------distribution---------\n");
 
-		for (int i = 0; i < 34; i++) // simuler une pioche
-		{
-			turn.drawCard(paquet);
-		}
+		/*
+		 * for (int i = 0; i < 34; i++) // simuler une pioche { turn.drawCard(paquet); }
+		 */
 
 		System.out.println("\n ------------Remember your cards----------- \n");
-		showDeckPlayerAll(players); // af : montrer les deux premieres cartes
+
+		delai.schedule(new TimerTask() {
+			int time = 4;
+
+			@Override
+			public void run() {
+				showDeckPlayer(players);
+				if (time == 0) {
+					cancel();
+				}
+				time--;
+			}
+		}, 0, 1000);
+		delay(5005);
+
+		System.out.println("salut");
 		System.out.println("\n ------------ Start Playing------------ \n");
 		setCurrent_player(firstPlay(round));
 		last_turn_count = nb_of_players;
@@ -66,7 +83,6 @@ public class Game {
 			players.get(1).setScoreGame(5);
 			last_turn = turn.firstMove(paquet, players.get(getCurrent_player()), last_turn, turn_count);
 			pointsCalculation();// pour calculer le nombre de points de chaque joueur après le coup
-			showDeckPlayerAll(players);
 
 			for (int i = 0; i < paquet.getDiscard().size(); i++) {
 				System.out.println(paquet.getDiscard().get(i).getRank() + " " + paquet.getDiscard().get(i).getSuit());
@@ -129,7 +145,6 @@ public class Game {
 	public static int chooseNumberPlayer() {
 		Scanner sc = new Scanner(System.in);
 		int nb_player = 0;
-
 		try {
 			do {
 				System.out.println("Choose number of player : ");
@@ -168,7 +183,7 @@ public class Game {
 
 	public static void showDeckPlayer(ArrayList<Player> players) {
 		for (int i = 0; i < Game.getNbOfPlayers(); i++) {
-			System.out.println("deck of player : " + i + "\n");
+			System.out.println("deck of " + players.get(i).getUsername() + "\n");
 			System.out.println(/*
 								 * "--------------------------- |\n" +
 								 * players.get(i).deck_player.get(0).getRank() + " " + players.get(i).
@@ -221,6 +236,16 @@ public class Game {
 
 	public static void setCurrent_player(int current_player) {
 		Game.current_player = current_player;
+	}
+
+	private static void delay(int delai) {
+		System.out.println("DEBUT appel bloquant");
+		try {
+			Thread.currentThread().sleep(delai);
+			System.out.println("FIN appel bloquant");
+		} catch (InterruptedException e) {
+			System.out.println("appel bloquant interrompu");
+		}
 	}
 
 }

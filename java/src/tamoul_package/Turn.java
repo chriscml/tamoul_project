@@ -149,7 +149,7 @@ public class Turn {
 			paquet.getDiscard().add(temp2); // mets la carte du joueur sur la pioche
 			break;
 		case 1:
-			if (player.getScoreGame() <= SCORE_MIN_TO_TAMOUL && already_last_turn == false) {
+			if (player.getScoreGame() >= SCORE_MIN_TO_TAMOUL && already_last_turn == false) {
 				System.out.println("you can't tamoul already");
 
 			} else {
