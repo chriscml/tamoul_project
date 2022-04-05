@@ -12,6 +12,10 @@ public class Player {
 		this.setUsername(username);
 	}
 
+	public Player(int i) {
+		this.setUsername("player" + (i + 1));
+	}
+
 	public String getUsername() {
 		return username;
 	}

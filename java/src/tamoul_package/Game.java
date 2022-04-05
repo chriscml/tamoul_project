@@ -174,7 +174,7 @@ public class Game {
 	public static void chooseNumberOfPlayers() {
 		nb_of_players = chooseNumberPlayer();
 		for (int i = 0; i < nb_of_players; i++) {
-			players.add(new Player(null));
+			players.add(new Player(i));
 			players.get(i).setId(i);
 			System.out.println("new slot");
 		}
